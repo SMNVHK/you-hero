@@ -2,15 +2,23 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $scenario = [];
 
-  for ($i = 0; $i < 5; $i++) {
+  $stepCount = 0;
+  while (isset($_POST["step_{$stepCount}_title"])) {
     $step = [
-      'title' => $_POST["step_{$i}_title"],
-      'choices' => [
-        $_POST["step_{$i}_choice_1"],
-        $_POST["step_{$i}_choice_2"]
-      ]
+      'title' => $_POST["step_{$stepCount}_title"],
+      'choices' => explode(',', $_POST["step_{$stepCount}_choices"])
     ];
+
+    $imageFile = $_FILES["step_{$stepCount}_image"];
+    if ($imageFile['error'] === UPLOAD_ERR_OK) {
+      $uploadDir = 'uploads/';
+      $uploadFile = $uploadDir . basename($imageFile['name']);
+      move_uploaded_file($imageFile['tmp_name'], $uploadFile);
+      $step['image'] = $uploadFile;
+    }
+
     $scenario[] = $step;
+    $stepCount++;
   }
 
   $json = json_encode($scenario);

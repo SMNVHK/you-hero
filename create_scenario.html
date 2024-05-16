@@ -34,23 +34,25 @@
       stepDiv.appendChild(titleLabel);
       stepDiv.appendChild(titleInput);
 
-      for (let i = 1; i <= 2; i++) {
-        const choiceLabel = document.createElement('label');
-        choiceLabel.textContent = `Choix ${i} :`;
-        const choiceInput = document.createElement('input');
-        choiceInput.type = 'text';
-        choiceInput.name = `step_${stepCount}_choice_${i}`;
-        choiceInput.required = true;
-        stepDiv.appendChild(choiceLabel);
-        stepDiv.appendChild(choiceInput);
-      }
+      const imageLabel = document.createElement('label');
+      imageLabel.textContent = `Image de l'étape ${stepCount + 1} :`;
+      const imageInput = document.createElement('input');
+      imageInput.type = 'file';
+      imageInput.name = `step_${stepCount}_image`;
+      stepDiv.appendChild(imageLabel);
+      stepDiv.appendChild(imageInput);
+
+      const choicesLabel = document.createElement('label');
+      choicesLabel.textContent = `Choix de l'étape ${stepCount + 1} (séparés par des virgules) :`;
+      const choicesInput = document.createElement('input');
+      choicesInput.type = 'text';
+      choicesInput.name = `step_${stepCount}_choices`;
+      choicesInput.required = true;
+      stepDiv.appendChild(choicesLabel);
+      stepDiv.appendChild(choicesInput);
 
       stepsContainer.appendChild(stepDiv);
       stepCount++;
-
-      if (stepCount === 5) {
-        addStepButton.disabled = true;
-      }
     }
 
     addStepButton.addEventListener('click', addStep);
@@ -69,7 +71,6 @@
         form.reset();
         stepsContainer.innerHTML = '';
         stepCount = 0;
-        addStepButton.disabled = false;
       });
     });
   </script>
