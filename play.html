@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jouer un scénario</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div id="container">
+    <h1>Jouer un scénario</h1>
+    <div id="story"></div>
+    <div id="choices"></div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    const storyContainer = document.getElementById('story');
+    const choicesContainer = document.getElementById('choices');
+
+    let currentStep = 0;
+    let scenario = [];
+
+    function displayStep() {
+      const step = scenario[currentStep];
+      storyContainer.textContent = step.title;
+      choicesContainer.innerHTML = '';
+
+      step.choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.textContent = choice;
+        button.addEventListener('click', () => {
+          currentStep = index === 0 ? currentStep + 1 : currentStep + 2;
+          if (currentStep < scenario.length) {
+            displayStep();
+          } else {
+            storyContainer.textContent = "Fin du scénario.";
+            choicesContainer.innerHTML = '';
+          }
+        });
+        choicesContainer.appendChild(button);
+      });
+    }
+
+    fetch('get_scenario.php')
+      .then(response => response.json())
+      .then(data => {
+        scenario = data;
+        displayStep();
+      });
+  </script>
+</body>
+</html>

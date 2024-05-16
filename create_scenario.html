@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Créer un scénario</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div id="container">
+    <h1>Créer un scénario</h1>
+    <form id="scenario-form">
+      <div id="steps"></div>
+      <button type="button" id="add-step">Ajouter une étape</button>
+      <button type="submit">Enregistrer le scénario</button>
+    </form>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    const form = document.getElementById('scenario-form');
+    const stepsContainer = document.getElementById('steps');
+    const addStepButton = document.getElementById('add-step');
+
+    let stepCount = 0;
+
+    function addStep() {
+      const stepDiv = document.createElement('div');
+      stepDiv.classList.add('step');
+
+      const titleLabel = document.createElement('label');
+      titleLabel.textContent = `Titre de l'étape ${stepCount + 1} :`;
+      const titleInput = document.createElement('input');
+      titleInput.type = 'text';
+      titleInput.name = `step_${stepCount}_title`;
+      titleInput.required = true;
+      stepDiv.appendChild(titleLabel);
+      stepDiv.appendChild(titleInput);
+
+      for (let i = 1; i <= 2; i++) {
+        const choiceLabel = document.createElement('label');
+        choiceLabel.textContent = `Choix ${i} :`;
+        const choiceInput = document.createElement('input');
+        choiceInput.type = 'text';
+        choiceInput.name = `step_${stepCount}_choice_${i}`;
+        choiceInput.required = true;
+        stepDiv.appendChild(choiceLabel);
+        stepDiv.appendChild(choiceInput);
+      }
+
+      stepsContainer.appendChild(stepDiv);
+      stepCount++;
+
+      if (stepCount === 5) {
+        addStepButton.disabled = true;
+      }
+    }
+
+    addStepButton.addEventListener('click', addStep);
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      fetch('save_scenario.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        alert(data);
+        form.reset();
+        stepsContainer.innerHTML = '';
+        stepCount = 0;
+        addStepButton.disabled = false;
+      });
+    });
+  </script>
+</body>
+</html>

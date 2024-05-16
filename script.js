@@ -1,0 +1,1 @@
+// Code JavaScript commun à toutes les pages
